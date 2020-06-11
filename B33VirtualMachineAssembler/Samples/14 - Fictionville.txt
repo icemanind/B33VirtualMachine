@@ -1,0 +1,214 @@
+﻿; This sample is a simple (very simple) text-adventure
+; game. Your car has run out of gas in the town
+; of Fictionville. The objective is to find a gas
+; station, get some gas, then return back to your car.
+; Good Luck Adventurers!
+locations   str         "North Baker Street"
+            chr         0
+            str         "North Main Street"
+            chr         0
+            str         "North Elm Street"
+            chr         0
+            str         "Baker Street"
+            chr         0
+            str         "Main Street"
+            chr         0
+            str         "Elm Street"
+            chr         0
+            str         "A Dark Alley"
+            chr         0
+            str         "South Main Street"
+            chr         0
+            str         "South Elm Street"
+            chr         0
+numLocation chr         9
+objects     chr         1
+            str         "A McDonald's"
+            chr         0
+            chr         4
+            str         "A Pottery Barn"
+            chr         0
+            chr         7            
+            str         "A Trash Dumpster"
+            chr         0
+            chr         5
+            str         "Your Car"
+            chr         0
+            chr         6
+            str         "A Walmart Store"
+            chr         0
+            chr         9
+            str         "A Gas Station"
+            chr         0
+numObjects  chr         6
+travelTbl   chr         0
+            chr         4
+            chr         2
+            chr         0
+            chr         0
+            chr         5
+            chr         3
+            chr         1
+            chr         0
+            chr         6
+            chr         0
+            chr         2
+            chr         1
+            chr         7
+            chr         5
+            chr         0
+            chr         2
+            chr         8
+            chr         0
+            chr         4
+            chr         3
+            chr         9
+            chr         0
+            chr         0
+            chr         4
+            chr         0
+            chr         8
+            chr         0
+            chr         5
+            chr         0
+            chr         0
+            chr         7
+            chr         6
+            chr         0
+            chr         0
+            chr         0
+verbs       str         "take"
+            chr         0
+            chr         1
+            str         "get"
+            chr         0
+            chr         1
+            str         "buy"
+            chr         0
+            chr         7
+            str         "drop"
+            chr         0
+            chr         2
+            str         "go"
+            chr         0
+            chr         3
+            str         "look"
+            chr         0
+            chr         4
+            str         "move"
+            chr         0
+            chr         5
+            str         "push"
+            chr         0
+            chr         5
+            str         "pull"
+            chr         0
+            chr         5
+            str         "inventory"
+            chr         0
+            chr         6
+            str         "inv"
+            chr         0
+            chr         6
+numCommands chr         11
+clearLabel  str         "                                                                   "
+            chr         0
+label1      str         "You are at: "
+            chr         0
+label2      str         "You see: "
+            chr         0
+currentRoom chr         5
+objBuffer   rmb         200
+tmpBuffer   rmb         1
+welcomeMsg  str         "Welcome to Fictionville!"
+            chr         0
+start       ldx         #objBuffer
+            lda         #0
+            ldb         #199
+loop1       sta         ,x+
+            subb        #1
+            cmpb        #0
+            jeq         done1
+            jmp         loop1
+done1       ldx         #welcomeMsg
+            ldy         #$e000
+            call        print
+            call        prntStatus
+            call        prntObjects
+            end         start
+prntObjects push        a
+            push        b
+            push        x
+            push        y
+            ldx         #clearLabel
+            ldy         #$e140
+            call        print
+            ldx         #label2
+            call        print
+            ldx         #objects
+            ldy         #numObjects
+            ldb         ,y
+            ldy         #currentRoom
+            push        b
+            
+
+prntStatus  push        a
+            push        b
+            push        x
+            push        y
+            ldx         #clearLabel
+            ldy         #$e0a0
+            call        print
+            ldx         #label1
+            call        print
+            ldy         #$e0b8
+            push        y
+            ldy         #currentRoom
+            lda         ,y
+            pop         y
+            call        getRoomDesc
+            call        print
+            pop         y
+            pop         x
+            pop         b
+            pop         a
+            ret
+getRoomDesc push        a
+            push        b
+            push        y
+            ldx         #locations
+getRomLoop2 suba        #1
+            cmpa        #0
+            jeq         getRomDone1
+getRomLoop1 ldb         ,x+
+            cmpb        #0
+            jne         getRomLoop1
+            jmp         getRomLoop2
+getRomDone1 pop         y
+            pop         b
+            pop         a
+            ret
+print       push        a
+            push        b
+            push        x
+            push        y
+            tfr         y,d
+            push        d
+prntloop1   lda         ,x+
+            cmpa        #0
+            jeq         prntfinish
+            cmpa        #13
+            jeq         prnt2
+            sta         ,y++
+            jmp         prntloop1
+prnt2       pop         d
+            addd        #160
+            tfr         d,y
+            push        d
+            jmp         prntloop1
+prntfinish  pop         d
+            pop         y
+            pop         x
+            pop         b
+            pop         a
+            ret

@@ -1,0 +1,10 @@
+﻿; This program will simply load data
+; from a memory address into the A register.
+; It will load whatever data is contained
+; at address hex $1000 into the A register.
+; It will then load whatever data is contained
+; at address 8192 (decimal 8192) into the 
+; B register
+start       lda         $1000       ; Load A with the data contained at address 0x1000
+            ldb         8192        ; Load B with the data contained at address 8192
+            end         start

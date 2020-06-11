@@ -1,0 +1,10 @@
+﻿; This program simply puts an
+; 'A' in the upper left hand corner
+; of the screen. It first loads
+; the A register with 65, which is
+; the ASCII code for an 'A'. It then
+; stores that letter at $e000, which
+; is the beginning of the video memory.
+Start       lda         #65         ; Load A register with 65 (ASCII 'A')
+            sta         $e000       ; Store the value of A at memory location 0xE000 (the virtual screen)
+            end         Start

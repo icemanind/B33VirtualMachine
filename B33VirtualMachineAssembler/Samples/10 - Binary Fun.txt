@@ -1,0 +1,605 @@
+﻿; This program is a binary testing program that
+; allows you to input two numbers and either do
+; an AND, an OR or an XOR operation against the
+; two numbers.
+menutext    str         "1) AND Operations"
+            chr         13
+            str         "2) OR Operations"
+            chr         13
+            str         "3) XOR Operations"
+            chr         13
+            str         "Q) Quit"
+            chr         0
+prompttext  str         "Select an option -->"
+            chr         0
+enternum1   str         "Enter a number (0-255) -------->"
+            chr         0
+enternum2   str         "Enter another number (0-255) -->"
+            chr         0
+presskeymsg str         "Press any key to continue"
+            chr         0
+menupos     chr         $e2
+            chr         $80
+num1buf     rmb         4
+num2buf     rmb         3
+buffer      rmb         4
+num1        rmb         1
+num2        rmb         1
+cursortmr   rmb         1
+cursoron    str         "_"
+cursoroff   str         " "
+start       call        init
+            ldx         #menutext
+            ldy         #$e000
+            call        print
+            ldy         menupos
+            ldx         #prompttext
+            call        print
+            addy        #40
+mloop1      call        getKey
+            cmpa        #113
+            jeq         endProgram
+            cmpa        #81
+            jeq         endProgram
+            cmpa        #49
+            jeq         andOp
+            cmpa        #50
+            jeq         OrOp
+            cmpa        #51
+            jeq         XorOp
+            jmp         mloop1
+andOp       lda         #5
+            call        clearrows
+            ldy         #$e000
+            ldx         #enternum1
+            call        print
+            addy        #64
+            ldx         #num1buf
+            call        getNumber
+            ldx         #num1
+            sta         ,x
+            ldy         #$e0a0
+            ldx         #enternum2
+            call        print
+            addy        #64
+            ldx         #num2buf
+            call        getNumber
+            ldx         #num2
+            sta         ,x
+            ldy         #$e1e0
+            ldx         #num1
+            lda         ,x
+            call        printbinnum
+            ldx         #num2
+            lda         ,x
+            ldy         #$e320
+            call        printbinnum
+            ldy         #$e1f2
+            ldb         #$28
+            stb         ,y++
+            ldx         #num1buf
+            ldb         ,x+
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone1
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone1
+            stb         ,y++
+mdone1      ldb         #$29
+            stb         ,y
+            ldy         #$e332
+            ldb         #$28
+            stb         ,y++
+            ldx         #num2buf
+            ldb         ,x+
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone2
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone2
+            stb         ,y++
+mdone2      ldb         #$29
+            stb         ,y
+            ldy         #$e280
+            lda         #$41
+            sta         ,y++
+            lda         #$4E
+            sta         ,y++
+            lda         #$44
+            sta         ,y
+            lda         #$2D
+            ldy         #$e3c0
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            ldx         #num1
+            lda         ,x
+            ldx         #num2
+            ldb         ,x
+            anda        b
+            push        a
+            ldy         #$e460
+            call        printbinnum
+            pop         a
+            ldx         #num1buf
+            call        num2txt
+            ldy         #$e472
+            lda         #$28
+            sta         ,y++
+            ldx         #num1buf
+            lda         ,x+
+            sta         ,y++
+            lda         ,x+
+            cmpa        #0
+            jeq         mdone3
+            sta         ,y++
+            lda         ,x+
+            cmpa        #0
+            jeq         mdone3
+            sta         ,y++
+mdone3      lda         #$29
+            sta         ,y
+            ldy         #$e500
+            ldx         #presskeymsg
+            call        print
+            addy        #26
+            call        getkey
+            lda         #9
+            call        clearrows
+            jmp         start
+OrOp        lda         #5
+            call        clearrows
+            ldy         #$e000
+            ldx         #enternum1
+            call        print
+            addy        #64
+            ldx         #num1buf
+            call        getNumber
+            ldx         #num1
+            sta         ,x
+            ldy         #$e0a0
+            ldx         #enternum2
+            call        print
+            addy        #64
+            ldx         #num2buf
+            call        getNumber
+            ldx         #num2
+            sta         ,x
+            ldy         #$e1e0
+            ldx         #num1
+            lda         ,x
+            call        printbinnum
+            ldx         #num2
+            lda         ,x
+            ldy         #$e320
+            call        printbinnum
+            ldy         #$e1f2
+            ldb         #$28
+            stb         ,y++
+            ldx         #num1buf
+            ldb         ,x+
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone4
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone4
+            stb         ,y++
+mdone4      ldb         #$29
+            stb         ,y
+            ldy         #$e332
+            ldb         #$28
+            stb         ,y++
+            ldx         #num2buf
+            ldb         ,x+
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone5
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone5
+            stb         ,y++
+mdone5      ldb         #$29
+            stb         ,y
+            ldy         #$e280
+            lda         #$4F
+            sta         ,y++
+            lda         #$52
+            sta         ,y
+            lda         #$2D
+            ldy         #$e3c0
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            ldx         #num1
+            lda         ,x
+            ldx         #num2
+            ldb         ,x
+            ora         b
+            push        a
+            ldy         #$e460
+            call        printbinnum
+            pop         a
+            ldx         #num1buf
+            call        num2txt
+            ldy         #$e472
+            lda         #$28
+            sta         ,y++
+            ldx         #num1buf
+            lda         ,x+
+            sta         ,y++
+            lda         ,x+
+            cmpa        #0
+            jeq         mdone6
+            sta         ,y++
+            lda         ,x+
+            cmpa        #0
+            jeq         mdone6
+            sta         ,y++
+mdone6      lda         #$29
+            sta         ,y
+            ldy         #$e500
+            ldx         #presskeymsg
+            call        print
+            addy        #26
+            call        getkey
+            lda         #9
+            call        clearrows
+            jmp         start
+XorOp       lda         #5
+            call        clearrows
+            ldy         #$e000
+            ldx         #enternum1
+            call        print
+            addy        #64
+            ldx         #num1buf
+            call        getNumber
+            ldx         #num1
+            sta         ,x
+            ldy         #$e0a0
+            ldx         #enternum2
+            call        print
+            addy        #64
+            ldx         #num2buf
+            call        getNumber
+            ldx         #num2
+            sta         ,x
+            ldy         #$e1e0
+            ldx         #num1
+            lda         ,x
+            call        printbinnum
+            ldx         #num2
+            lda         ,x
+            ldy         #$e320
+            call        printbinnum
+            ldy         #$e1f2
+            ldb         #$28
+            stb         ,y++
+            ldx         #num1buf
+            ldb         ,x+
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone7
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone7
+            stb         ,y++
+mdone7      ldb         #$29
+            stb         ,y
+            ldy         #$e332
+            ldb         #$28
+            stb         ,y++
+            ldx         #num2buf
+            ldb         ,x+
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone8
+            stb         ,y++
+            ldb         ,x+
+            cmpb        #0
+            jeq         mdone8
+            stb         ,y++
+mdone8      ldb         #$29
+            stb         ,y
+            ldy         #$e280
+            lda         #$4F
+            sta         ,y++
+            lda         #$52
+            sta         ,y
+            lda         #$2D
+            ldy         #$e3c0
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            sta         ,y++
+            ldx         #num1
+            lda         ,x
+            ldx         #num2
+            ldb         ,x
+            xora        b
+            push        a
+            ldy         #$e460
+            call        printbinnum
+            pop         a
+            ldx         #num1buf
+            call        num2txt
+            ldy         #$e472
+            lda         #$28
+            sta         ,y++
+            ldx         #num1buf
+            lda         ,x+
+            sta         ,y++
+            lda         ,x+
+            cmpa        #0
+            jeq         mdone9
+            sta         ,y++
+            lda         ,x+
+            cmpa        #0
+            jeq         mdone9
+            sta         ,y++
+mdone9      lda         #$29
+            sta         ,y
+            ldy         #$e500
+            ldx         #presskeymsg
+            call        print
+            addy        #26
+            call        getkey
+            lda         #9
+            call        clearrows
+            jmp         start
+endProgram  end         start
+printbinnum push        y
+            push        b
+            ldb         #8
+pbnLoop1    lsft        a
+            subb        #1
+            jos         pbnOne
+            push        a
+            lda         #48
+            sta         ,y++
+            pop         a
+            jmp         pbnDone
+pbnOne      push        a
+            lda         #49
+            sta         ,y++
+            pop         a
+pbnDone     cmpb        #0
+            jne         pbnLoop1
+            pop         b
+            pop         y
+            ret
+init        push        x
+            push        a
+            lda         #0
+            ldx         #num1buf
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            ldx         #buffer
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            ldx         #num2buf
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            pop         a
+            pop         x
+            ret
+getNumber   push        y
+            push        x
+            push        b
+            ldb         #1
+gnLoop1     call        getKey
+            cmpa        #13
+            jeq         gnDone
+            cmpa        #8
+            jeq         gnBksp
+            cmpa        #48
+            jlt         gnLoop1
+            cmpa        #57
+            jgt         gnLoop1
+            cmpb        #3
+            jgt         gnLoop1
+            addb        #1
+            sta         ,y++
+            sta         ,x+
+            jmp         gnLoop1
+gnBksp      cmpb        #1
+            jle         gnLoop1
+            lda         #32
+            sta         ,y--
+            lda         #0
+            sta         ,x-
+            subb        #1
+            jmp         gnLoop1
+gnDone      pop         b
+            pop         x
+            call        txt2num
+            pop         y
+            ret
+getKey      call        blink
+            call        key
+            cmpa        #0
+            jeq         getKey
+            ret
+clearrows   push        y
+            push        b
+            push        x
+            ldy         #$e000
+            ldb         #32
+crloop2     ldx         #0
+crloop1     stb         ,y++
+            addx        #1
+            cmpx        #80
+            jne         crloop1
+            suba        #1
+            cmpa        #0
+            jne         crloop2
+            pop         x
+            pop         b
+            pop         y
+            ret
+print       push        a                       ; Save the A register
+            push        b                       ; Save the B register
+            push        x                       ; Save the X register
+            push        y                       ; Save the Y register
+            tfr         y,d                     ; Save Y position in D register
+            push        d                       ; Save D register
+prntloop1   lda         ,x+                     ; Load A with a byte pointed to by the X register then increment the X register by one
+            cmpa        #0                      ; Is it a 0x00 byte?
+            jeq         prntfinish              ; If it is a 0x00 byte, jump to our finish label
+            cmpa        #13                     ; Is it a carriage return
+            jeq         prnt2                   ; If it is, jump to prnt2
+            sta         ,y++                    ; Store the byte at the address pointed to by our Y register and increment Y by 2
+            jmp         prntloop1               ; Repeat the process by jumping to our loop1 label
+prnt2       pop         d                       ; Restore D register
+            addd        #160                    ; Add 160
+            tfr         d,y                     ; Load Y with the value of D
+            push        d                       ; Save D register
+            jmp         prntloop1               ; Jump back to loop
+prntfinish  pop         d                       ; Restore D register
+            pop         y                       ; Restore Y register
+            pop         x                       ; Restore X register
+            pop         b                       ; Restore B register
+            pop         a                       ; Restore A register
+            ret                                 ; The subroutine is finished, so return
+blink       push        a                       ; Save A register
+            push        x                       ; Save X register
+            push        b
+            ldx         #cursortmr              ; Load X with the address of our cursor timer byte
+            lda         ,x                      ; Load A with the value pointed to by X register
+            cmpa        #30                     ; Is our cursor timer at 30 yet? (you can decrease this number to have a faster cursor blink speed)
+            jlt         blink4                  ; Jump if less then 30 to blink4
+            lda         #0                      ; Our cursor timer is up, so reset it to 0
+            sta         ,x                      ; Store
+            cmpb        #0                      ; Check if B register equals 0
+            jne         blink2                  ; If its not equal to 0, jump to blink2 (turn off)
+            ldx         #cursoron               ; Load X with our cursor on character
+            ldb         #1                      ; toggle B register
+            jmp         blink3                  ; Jump to blink3
+blink2      ldx         #cursoroff              ; Load X with our cursor off character
+            ldb         #0                      ; Toggle B register
+blink3      lda         ,x                      ; Load A register with our cursor character
+            sta         ,y                      ; Store it at Register Y location (the screen)
+blink4      ldx         #cursortmr              ; Load X with our Cursor timer byte address
+            lda         ,x                      ; Load the byte into our A register
+            adda        #1                      ; Add 1
+            sta         ,x                      ; Save the byte back in our cursor timer address
+            pop         b
+            pop         x                       ; restore X register
+            pop         a                       ; Restore A register
+            ret                                 ; Subroute is done, so return
+txt2num     push        x
+            push        y
+            push        b
+            lda         #0
+            ldb         ,x+
+            cmpb        #0
+            jeq         t2ndone
+            subb        #48
+            lda         ,x+
+            cmpa        #0
+            jeq         t2ndone
+            suba        #48
+            push        a
+            lda         #10
+            mul8        b,a
+            pop         a
+            addb        a
+            lda         ,x+
+            cmpa        #0
+            jeq         t2ndone
+            suba        #48
+            push        a
+            lda         #10
+            mul8        b,a
+            pop         a
+            addb        a
+t2ndone     tfr         b,a
+            pop         b
+            pop         y
+            pop         x
+            ret
+num2txt     push        x
+            push        y
+            push        b
+            tfr         x,y
+n2tloop1    ldb         #10
+            div8        a,b
+            addb        #48
+            stb         ,x+
+            cmpa        #0
+            jeq         n2tdone
+            jmp         n2tloop1
+n2tdone     ldb         #0
+            stb         ,x
+            tfr         y,x
+            call        reverse
+            pop         b
+            pop         y
+            pop         x
+            ret
+reverse     push        x
+            ldb         #0
+reverselp1  lda         ,x+
+            cmpa        #0
+            jeq         reversedn1
+            addb        #1
+            jmp         reverselp1
+reversedn1  pop         x
+            push        x
+            ldy         #buffer
+            subb        #1
+reverselp2  lda         b,x
+            sta         ,y+
+            cmpb        #0
+            jeq         reversedn2
+            subb        #1
+            jmp         reverselp2
+reversedn2  lda         #0
+            sta         ,y
+            pop         x
+            push        x
+            ldy         #buffer
+reverselp3  lda         ,y+
+            sta         ,x+
+            cmpa        #0
+            jeq         reversedn3
+            jmp         reverselp3
+reversedn3  pop         x
+            ret
+key         push        x
+            ldx         #$ffff
+            lda         ,x
+            pop         x
+            ret

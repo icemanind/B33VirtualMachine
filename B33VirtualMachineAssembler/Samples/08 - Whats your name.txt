@@ -1,0 +1,93 @@
+﻿; This program will ask for your name.
+; After entering your name, it will greet
+; you with a hello! We are reusing our
+; Print subroutine from Sample 6
+name        rmb         100                     ; Reserve 100 bytes for storing the name entered
+cursortmr   rmb         1                       ; Reserve a byte for our cursor flash timer
+cursoron    str         "_"                     ; Define our "cursor on" character
+cursoroff   str         " "                     ; Define our "cursor off" character
+namePrompt  str         "What's your name: "    ; Define our prompt string
+            chr         0                       ; Define a 0x00 byte
+response    str         "Hello, "               ; Define our greeting string
+            chr         0                       ; Define a 0x00 byte
+start       ldx         #namePrompt             ; Load X register with the address of our name prompt
+            ldy         #$e000                  ; Load Y with our virtual screen address
+            call        print                   ; Call our print routine
+            ldy         #$e024                  ; Load Y with our the screen position after the prompt
+            ldx         #name                   ; Load X with our name input reserve area
+            ldb         #0                      ; Load B with 0 (this will be used as a toggle so we know if the cursor is off or on)
+loop1       call        blink                   ; Call our blink routine
+            call        key                     ; Check for a keystroke and store it in the A register
+            cmpa        #0                      ; Check if A register is 0 (if it is, no key has been pressed)
+            jeq         loop1                   ; Jump to loop1 until a key is pressed
+            cmpa        #13                     ; Check if the keystroke is the enter key
+            jeq         done                    ; If it is, we are done collecting input. Jump to done label
+            cmpa        #8                      ; Check if the keystroke is a backspace key
+            jeq         bksp                    ; If it is, jump to our bksp handler
+            call        storechar               ; Store the keystroke in our memory reserve
+            jmp         loop1                   ; Jump to loop1 and wait for another key
+bksp        cmpy		#$e024                  ; Check if we are at the beginning of the line prompt
+            jeq         loop1                   ; We are, so we ignore the backspace and jump back up to loop1 and wait for more keystrokes
+            lda         #32                     ; Load A register with 32 (ASCII ' ') character
+            sta         ,y                      ; Store the value of the A register at the address pointed to by the Y register
+            suby		#2                      ; Subtract 2 from the Y register.
+            sta         ,y                      ; Erase the character from the screen
+            subx        #1                      ; Subtract one from the X register
+            lda         #0                      ; Load A with 0
+            sta         ,x                      ; Store the 0 at the location pointed to by X register (our memory reserve)
+            jmp         loop1                   ; Jump back up to our loop1 label to wait for more keystrokes
+blink       push        a                       ; Save A register
+            push        x                       ; Save X register
+            ldx         #cursortmr              ; Load X with the address of our cursor timer byte
+            lda         ,x                      ; Load A with the value pointed to by X register
+            cmpa        #30                     ; Is our cursor timer at 30 yet? (you can decrease this number to have a faster cursor blink speed)
+            jlt         blink4                  ; Jump if less then 30 to blink4
+            lda         #0                      ; Our cursor timer is up, so reset it to 0
+            sta         ,x                      ; Store
+            cmpb        #0                      ; Check if B register equals 0
+            jne         blink2                  ; If its not equal to 0, jump to blink2 (turn off)
+            ldx         #cursoron               ; Load X with our cursor on character
+            ldb         #1                      ; toggle B register
+            jmp         blink3                  ; Jump to blink3
+blink2      ldx         #cursoroff              ; Load X with our cursor off character
+            ldb         #0                      ; Toggle B register
+blink3      lda         ,x                      ; Load A register with our cursor character
+            sta         ,y                      ; Store it at Register Y location (the screen)
+blink4      ldx         #cursortmr              ; Load X with our Cursor timer byte address
+            lda         ,x                      ; Load the byte into our A register
+            adda        #1                      ; Add 1
+            sta         ,x                      ; Save the byte back in our cursor timer address
+            pop         x                       ; restore X register
+            pop         a                       ; Restore A register
+            ret                                 ; Subroute is done, so return
+storechar   sta         ,x+                     ; Store the character in our memory reserve buffer and increment X by 1
+            sta         ,y++                    ; Show the character on the screen and increment Y by 2
+            lda         #0                      ; Reset A register to 0
+            ret                                 ; Return from our subroutine
+done        lda         #0                      ; We are done collection input. Reset A to 0
+            sta         ,x                      ; Store the value in our memory reserve to mark end of string
+            ldy         #$e0a0                  ; Load Y with our virtual screen address (second row)
+            ldx         #response               ; Load X with our response message
+            call        print                   ; Call the print routine
+            ldx         #name                   ; Load X with our name memory reserve buffer address
+            ldy         #$e0ae                  ; Load Y with the position just have the greeting
+            call        print                   ; Call the print routine
+            jmp         endProg                 ; Jump to the end of the program
+print       push        a                       ; Save the A register
+            push        x                       ; Save the X register
+            push        y                       ; Save the Y register
+loop2       lda         ,x+                     ; Load A with a byte pointed to by the X register then increment the X register by one
+            cmpa        #0                      ; Is it a 0x00 byte?
+            jeq         finish                  ; If it is a 0x00 byte, jump to our finish label
+            sta         ,y++                    ; Store the byte at the address pointed to by our Y register and increment Y by 2
+            jmp         loop2                   ; Repeat the process by jumping to our loop1 label
+finish      pop         y                       ; Restore Y register
+            pop         x                       ; Restore X register
+            pop         a                       ; Restore A register
+            ret                                 ; The subroutine is finished, so return
+endProg     end         start                   ; End program
+key         push        x
+            ldx         #$ffff
+            lda         ,x
+            pop         x
+            ret

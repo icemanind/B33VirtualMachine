@@ -1,0 +1,13 @@
+﻿' This very simple demo simply
+' clears the screen, then prints
+' Hello World! to the screen.
+' Note every line (unless its a comment)
+' must start with a line number
+
+' CLS clears the screen
+10 cls
+
+' PRINT prints a string to a B33Screen.
+' Note that PRINT only prints strings. If
+' you need to print a number, use PRINTNUM
+20 print "Hello World!"

@@ -1,0 +1,45 @@
+﻿' FizzBuzz is a program that will print all the numbers
+' between 1 and 100. If the number is evenly divisible
+' by 3, then it will print "Fizz" instead. If the number
+' is evenly divisible by 5, then it will print "Buzz"
+' instead. If the number is evenly divisible by both
+' 3 and 5, then it will print "FizzBuzz"
+' Set X location to 1
+7 x=1
+' Set Y location to 1
+8 y=1
+' Start FOR loop from 1 to 100
+10 for a = 1 to 100
+' Position Cursor
+11 locate y,x
+' If a modulo 15 is 0, then output "FizzBuzz"
+20 if a%15 = 0 then goto 200
+' If a modulo 3 is 0, then output "Fizz"
+30 if a%3 = 0 then goto 300
+' If a modulo 5 is 0, then output "Buzz"
+40 if a%5 = 0 then goto 400
+' Otherwise print the number
+50 printnum a
+' Increment our X location by 12
+52 x=x+12
+' If we are more then 65 characters over,
+' then we need to start a new line
+53 if x>65 then goto 500
+' Finish FOR loop
+60 next
+' End program
+70 end
+' Print FizzBuzz
+200 print "*FizzBuzz*"
+210 goto 52
+' Print Fizz
+300 print "*Fizz*"
+310 goto 52
+' Print Buzz
+400 print "*Buzz*"
+410 goto 52
+' Reset X to 1
+500 x=1
+' Increment Y
+510 y=y+1
+520 goto 60

@@ -1,0 +1,91 @@
+﻿' CLS clears the screen and sets the cursor to 0, 0
+10 cls
+
+' Initialize string variable to empty string
+' l$ will hold the last name
+20 l$=""
+
+' Initialize string variable to empty string
+' F$ will hold the first name
+30 f$ = ""
+
+' Prompt to enter first name
+40 print "Type your first name, then press enter    -----> "
+
+' Receive input and assign input to f$
+50 f$=input$()
+
+' If no name was entered, then print an error message and try again.
+' GETX() is a built in function to retrieve the X (column) position of the cursor.
+' It's sister function is GETY(), which retrieves the Y (row) position of the cursor.
+60 if f$="" then lx=getx(): locate 1,0: bgcolor red: fgcolor yellow:print "You must enter a first name!":bgcolor black: fgcolor white: locate 0,lx: goto 50
+
+' Now prompt for a last name
+70 locate 1,0
+80 print "Now type your last name, then press enter -----> "
+
+' Receive input and assign input to l$
+90 l$=input$()
+
+' If no last name was entered, print an error message and try again
+95 if l$="" then lx=getx(): locate 2,0: bgcolor red: fgcolor yellow:print "You must enter a last name!":bgcolor black: fgcolor white: locate 0,lx: goto 90
+
+' LOCATE moves the cursor to the specified location. The usage is LOCATE <row>, <column>
+100 locate 3,0
+
+' Make the first name "proper". This means if someone entered
+' their first name as "raNdy", making it "proper" makes it "Randy".
+' MID$ returns a portion of a string. The usage looks like this:
+' MID$(string, starting position, length)
+' MID$("Bowling", 1, 4) would return "Bowl".
+' MID$("Bowling", 2, 3) would return "owl".
+' starting position is 1-based, not 0-based
+'
+' UCASE$ converts a string to upper case. LCASE$ is the sister
+' function to convert a string to lower case.
+' LEN() returns the length of a string. LEN("Joe") returns 3.
+101 f$=ucase$(mid$(f$,1,1)) + lcase$(mid$(f$,2,len(f$)-1))
+102 l$=ucase$(mid$(l$,1,1)) + lcase$(mid$(l$,2,len(l$)-1))
+
+' CHR$(num) will return the character represented by ASCII numerical code <num>
+' In this case, 34 is the ASCII code for a double quote. Since double quotes
+' are used as delimiters in BASIC, we need to use CHR$(34)
+110 print "Your full name is " + chr$(34) +f$ + " " + l$ + chr$(34)
+120 locate 4,0
+130 print "Your initials are " + mid$(f$,1,1) + "." + mid$(l$,1,1) + "."
+140 locate 5,0
+150 print "Your first name has "
+160 printnum len(f$)
+170 print " letters in it. Your last name has "
+180 printnum len(l$)
+190 print "."
+200 rf$=""
+210 rl$=""
+220 for z = len(f$) to 1 step -1
+230 rf$=rf$+mid$(f$, z, 1)
+240 next
+250 for z = len(l$) to 1 step -1
+260 rl$=rl$+mid$(l$, z, 1)
+270 next
+271 rf$=ucase$(mid$(rf$,1,1)) + lcase$(mid$(rf$,2,len(rf$)-1))
+272 rl$=ucase$(mid$(rl$,1,1)) + lcase$(mid$(rl$,2,len(rl$)-1))
+280 locate 6,0
+290 print "If we reversed your name it would be: " + chr$(34)+rf$+" "+rl$+chr$(34)
+300 locate 7,0
+310 print "And your new initals would be " + mid$(rf$,1,1) + "." + mid$(rl$,1,1)+"."
+320 locate 9,0
+330 print "Your uppercase name is: " + ucase$(f$) + " "+ucase$(l$)
+340 locate 10,0
+350 print "Your lowercase name is: " + lcase$(f$)+" "+lcase$(l$)
+360 locate 12,0
+370 print "We are adding spaces to your first name: "
+380 f$ = "    " + f$+"        "
+390 print chr$(34)+f$+chr$(34)
+400 locate 13,0
+410 print "  Now we are going to trim the spaces off the left: " + chr$(34)+ltrim$(f$)+chr$(34)
+420 locate 14,0
+430 print " Now we are going to trim the spaces off the right: " + chr$(34)+rtrim$(f$)+chr$(34)
+440 locate 15,0
+450 print "Now we are going to trim the spacess off both ends: "+ chr$(34)+ltrim$(rtrim$(f$))+chr$(34)
+998 locate 17,0
+999 print "Hmmm.. Is't that a hoot?"

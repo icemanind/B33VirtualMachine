@@ -1,0 +1,137 @@
+﻿; This program will ask for a number between 0 and 255
+; and after typing in the number, it will convert the
+; number to binary. It does this by left shifting the
+; number. Each bit that is pushed to the left is 
+; "carried over" into the overflow flag. By looking at
+; the overflow flag with each shift, we can print either
+; a 0 or 1. After 8 shifts, we have our completed number.
+titleMsg    str         "This program will print the binary equivlent"
+            str         " of the number typed in (0-255)"
+            chr         0
+prompt      str         "Enter number -->"
+            chr         0
+num         rmb         3
+cursortmr   rmb         1                       ; Reserve a byte for our cursor flash timer
+cursoron    str         "_"                     ; Define our "cursor on" character
+cursoroff   str         " "                     ; Define our "cursor off" character
+start       ldx         #titleMsg
+            ldy         #$e000
+            call        print
+            ldy         #$e0a0
+            ldx         #prompt
+            call        print
+            ldy         #$e0c0
+            ldx         #num
+loop2       call        blink
+            call        key
+            cmpa        #0
+            jeq         loop2
+            cmpa        #13
+            jeq         done
+            cmpa        #8
+            jeq         bksp
+            cmpa        #$30
+            jlt         loop2
+            cmpa        #$39
+            jgt         loop2
+            sta         ,y++
+            sta         ,x+
+            jmp         loop2
+bksp        lda         #0
+            cmpy        #$e0c0
+            jeq         loop2
+            sta         ,x-
+            lda         #32
+            sta         ,y--
+            jmp         loop2
+done        call        txt2num
+            ldb         #8
+            ldy         #$e160
+loop3       lsft        a
+            subb        #1
+            jos         one
+            push        a
+            lda         #48
+            sta         ,y++
+            pop         a
+            jmp         done3
+one         push        a
+            lda         #49
+            sta         ,y++
+            pop         a
+done3       cmpb        #0
+            jne         loop3
+            end         start
+txt2num     push        x
+            push        y
+            push        b
+            lda         #0
+            ldx         #num
+            ldb         ,x+
+            cmpb        #0
+            jeq         done2
+            subb        #48
+            lda         ,x+
+            cmpa        #0
+            jeq         done2
+            suba        #48
+            push        a
+            lda         #10
+            mul8        b,a
+            pop         a
+            addb        a
+            lda         ,x+
+            cmpa        #0
+            jeq         done2
+            suba        #48
+            push        a
+            lda         #10
+            mul8        b,a
+            pop         a
+            addb        a
+done2       tfr         b,a
+            pop         b
+            pop         y
+            pop         x
+            ret
+print       push        a                       ; Save the A register
+            push        x                       ; Save the X register
+            push        y                       ; Save the Y register
+loop1       lda         ,x+                     ; Load A with a byte pointed to by the X register then increment the X register by one
+            cmpa        #0                      ; Is it a 0x00 byte?
+            jeq         finish                  ; If it is a 0x00 byte, jump to our finish label
+            sta         ,y++                    ; Store the byte at the address pointed to by our Y register and increment Y by 2
+            jmp         loop1                   ; Repeat the process by jumping to our loop1 label
+finish      pop         y                       ; Restore Y register
+            pop         x                       ; Restore X register
+            pop         a                       ; Restore A register
+            ret                                 ; The subroutine is finished, so return
+blink       push        a                       ; Save A register
+            push        x                       ; Save X register
+            ldx         #cursortmr              ; Load X with the address of our cursor timer byte
+            lda         ,x                      ; Load A with the value pointed to by X register
+            cmpa        #30                     ; Is our cursor timer at 30 yet? (you can decrease this number to have a faster cursor blink speed)
+            jlt         blink4                  ; Jump if less then 30 to blink4
+            lda         #0                      ; Our cursor timer is up, so reset it to 0
+            sta         ,x                      ; Store
+            cmpb        #0                      ; Check if B register equals 0
+            jne         blink2                  ; If its not equal to 0, jump to blink2 (turn off)
+            ldx         #cursoron               ; Load X with our cursor on character
+            ldb         #1                      ; toggle B register
+            jmp         blink3                  ; Jump to blink3
+blink2      ldx         #cursoroff              ; Load X with our cursor off character
+            ldb         #0                      ; Toggle B register
+blink3      lda         ,x                      ; Load A register with our cursor character
+            sta         ,y                      ; Store it at Register Y location (the screen)
+blink4      ldx         #cursortmr              ; Load X with our Cursor timer byte address
+            lda         ,x                      ; Load the byte into our A register
+            adda        #1                      ; Add 1
+            sta         ,x                      ; Save the byte back in our cursor timer address
+            pop         x                       ; restore X register
+            pop         a                       ; Restore A register
+            ret                                 ; Subroute is done, so return
+key         push        x
+            ldx         #$ffff
+            lda         ,x
+            pop         x
+            ret

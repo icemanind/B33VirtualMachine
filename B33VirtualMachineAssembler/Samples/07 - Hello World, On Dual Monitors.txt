@@ -1,0 +1,28 @@
+﻿; This program demonstrates how to write on dual monitors
+; Make sure when you assemble this program, that you
+; check the box that says "Program requires dual monitors"
+; otherwise, the virtual machine will not show the
+; second monitor
+message1    str         "Hello World! This is on monitor #1"
+            chr         0
+message2    str         "Hello World! This is on monitor #2"
+            chr         0
+start       ldx         #message1
+            ldy         #$e000
+            call        print
+            ldx         #message2
+            ldy         #$c000
+            call        print
+            end         start
+print       push        a
+            push        x
+            push        y
+loop1       lda         ,x+
+            cmpa        #0
+            jeq         finish
+            sta         ,y++
+            jmp         loop1
+finish      pop         y
+            pop         x
+            pop         a
+            ret

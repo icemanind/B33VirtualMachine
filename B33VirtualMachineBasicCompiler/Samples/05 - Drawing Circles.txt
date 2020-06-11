@@ -1,0 +1,52 @@
+﻿' This program draws a red, green and blue circle on the screen
+' The circles are drawn inside of each other. 
+' x = Our radius
+10 x=5
+' x0 = The X location of the circle
+40 x0=40
+' y0 = The Y location of the circle
+50 y0=8
+' Start with red circle
+60 bgcolor red
+70 fgcolor brightwhite
+80 call 300
+90 bgcolor blue
+100 x0=40
+110 y0=8
+111 x=4
+120 call 300
+130 x0=40
+140 y0=8
+150 x=6
+160 bgcolor green
+170 call 300
+180 end
+' x = Our Radius
+' x0 = The X location of the circle
+' y0 = The Y location of the circle
+300 re=1-x
+301 y=0
+302 while x>=y
+310 locate y+y0,x+x0
+320 print " "
+330 locate x+y0,y+x0
+340 print " "
+350 locate y+y0,x0-x
+360 print " "
+370 locate x+y0,x0-y
+380 print " "
+390 locate y0-y,x0-x
+400 print " "
+410 locate y0-x,x0-y
+420 print " "
+430 locate y0-y,x0+x
+440 print " "
+450 locate y0-x,x0+y
+460 print " "
+470 y=y+1
+480 if re>60000 then re=re + 2*y+1
+490 if re>60000 then goto 520
+500 x=x-1
+510 re = re + 2* (y-x+1)
+520 loop
+530 return

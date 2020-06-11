@@ -1,0 +1,16 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:B33VirtualMachineWpf"
+        xmlns:Hardware="clr-namespace:B33Cpu.Hardware;assembly=B33Cpu" x:Class="B33VirtualMachineWpf.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="537.608" Width="759.574">
+    <Grid>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="98.509,472.538,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Hardware:B33ScreenWpf x:Name="B33MainScreen" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="721.487" MemoryLocation="57344"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="252.829,472.538,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+
+    </Grid>
+</Window>

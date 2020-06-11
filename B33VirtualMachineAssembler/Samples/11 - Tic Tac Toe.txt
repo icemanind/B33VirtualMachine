@@ -1,0 +1,381 @@
+﻿; This program is the classic rendition of the popular
+; tic-tac-toe game. 2 Players are required to play.
+; X goes first. You simply push the number cooresponding
+; to the position on the board you want to go
+movePromptxt str         "What is your move? --> "
+            chr         0
+cursoron    str         "_"                     ; Define our "cursor on" character
+cursoroff   str         " "                     ; Define our "cursor off" character
+cursortmr   rmb         1                       ; Reserve a byte for our cursor flash timer
+cursortogl  rmb         1                       ; Reserve a byte for our cursor toggle
+player1p    str         "Player 1 (X), "
+            chr         0
+player2p    str         "Player 2 (O), "
+            chr         0
+p1winmsg    str         "Player 1 (X) Wins!"
+            chr         0
+p2winmsg    str         "Player 2 (O) Wins!"
+            chr         0
+drawwinmsg  str         "It was a draw!"
+            chr         0
+illegalMove str         "Invalid Move! Try again!"
+            chr         0
+matchSet    rmb         1
+matchLen    chr         23
+matchPattern chr        0
+            chr         3
+            chr         6
+            chr         1
+            chr         4
+            chr         7
+            chr         2
+            chr         5
+            chr         8
+            chr         0
+            chr         4
+            chr         8
+            chr         2
+            chr         4
+            chr         6
+            chr         0
+            chr         1
+            chr         2
+            chr         3
+            chr         4
+            chr         5
+            chr         6
+            chr         7
+            chr         8
+            chr         10
+tttData     rmb         9
+boardCount  rmb         1
+playerTurn  rmb         1
+checkBuffer rmb         1
+start       call        initData
+            call        printboard
+            ldx         #playerTurn
+            lda         #1
+            sta         ,x
+            call        movePrompt
+loop3       call        blink
+            call        key
+            cmpa        #0
+            jeq         loop3
+            cmpa        #49
+            jge         label1
+            jmp         loop3
+label1      cmpa        #57
+            jle         label2
+            jmp         loop3
+label2      tfr         a,b
+            ldx         #tttData
+            subb        #49
+            lda         b,x
+            cmpa        #88
+            jeq         badmove
+            cmpa        #79
+            jeq         badmove
+            jmp         goodmove
+badmove     call        showillmove
+            jmp         loop3
+goodmove    ldx         #playerTurn
+            lda         ,x
+            cmpa        #1
+            jeq         p1go
+            lda         #1
+            sta         ,x
+            ldx         #tttData
+            lda         #79
+            sta         b,x
+            jmp         done
+p1go        lda         #2
+            sta         ,x
+            ldx         #tttData
+            lda         #88
+            sta         b,x
+done        call        hideillmove
+            call        printboard
+            call        checkWin
+            cmpa        #1
+            jeq         play1Win
+            cmpa        #2
+            jeq         play2Win
+            call        checkDraw
+            cmpa        #1
+            jeq         drawWin
+            call        movePrompt
+            jmp         loop3
+drawWin     ldx         #drawwinmsg
+            ldy         #$e280
+            call        print
+            jmp         endprogram
+play1Win    ldx         #p1winmsg
+            ldy         #$e280
+            call        print
+            jmp         endprogram
+play2Win    ldx         #p2winmsg
+            ldy         #$e280
+            call        print
+            jmp         endprogram
+checkDraw   push        x
+            push        b
+            ldb         #0
+            ldx         #tttData
+loop9       lda         ,x+
+            cmpa        #0
+            jeq         noDraw
+            addb        #1
+            cmpb        #9
+            jge         yesDraw
+            jmp         loop9
+noDraw      lda         #0
+            pop         b
+            pop         x
+            ret
+yesDraw     lda         #1
+            pop         b
+            pop         x
+            ret
+checkWin    push        b
+            push        x
+            push        y
+            lda         #0
+            ldx         #matchPattern
+            ldy         #tttData
+cwLoop      ldb         ,x+
+            cmpb        #10
+            jeq         cwexit
+            ldb         b,y
+            adda        #1
+            cmpa        #23
+            jge         cwexit
+            cmpb        #88
+            jeq         x2comp
+            cmpb        #79
+            jeq         o2comp
+            addx        #2
+            jmp         cwLoop
+x2comp      ldb         ,x+
+            adda        #1
+            ldb         b,y
+            cmpb        #88
+            jeq         x3comp
+            addx        #1
+            jmp         cwLoop
+x3comp      ldb         ,x+
+            adda        #1
+            ldb         b,y
+            cmpb        #88
+            jeq         xwins
+            jmp         cwLoop
+o2comp      ldb         ,x+
+            adda        #1
+            ldb         b,y
+            cmpb        #79
+            jeq         o3comp
+            addx        #1
+            jmp         cwLoop
+o3comp      ldb         ,x+
+            adda        #1
+            ldb         b,y
+            cmpb        #79
+            jeq         owins
+            jmp         cwLoop
+xwins       lda         #1
+            jmp         endcw
+owins       lda         #2
+            jmp         endcw
+cwexit      lda         #0
+endcw       pop         y
+            pop         x
+            pop         b
+            ret
+hideillmove push        a
+            push        x
+            push        y
+            ldy         #$e280
+            lda         #32
+loop6       sta         ,y++
+            cmpy        #$e2b0
+            jne         loop6
+            lda         #7
+            ldy         #$e281
+loop7       sta         ,y++
+            cmpy        #$e2b1
+            jne         loop7
+            pop         y
+            pop         x
+            pop         a
+            ret
+showillmove push        a
+            push        x
+            push        y
+            ldy         #$e280
+            ldx         #illegalMove
+            call        print
+            ldy         #$e281
+            lda         #79
+loop4       sta         ,y++
+            cmpy        #$e2b1
+            jne         loop4
+            pop         y
+            pop         x
+            pop         a
+            ret
+blink       push        d
+            push        x
+            push        y
+            ldy         #$e22a
+            ldx         #cursortmr
+            lda         ,x
+            cmpa        #30
+            jlt         blink4
+            lda         #0
+            sta         ,x
+            ldx         #cursortogl
+            ldb         ,x
+            cmpb        #0
+            jne         blink2
+            ldb         #1
+            stb         ,x
+            ldx         #cursoron
+            jmp         blink3
+blink2      ldx         #cursortogl
+            ldb         #0
+            stb         ,x
+            ldx         #cursoroff
+blink3      lda         ,x
+            sta         ,y
+blink4      ldx         #cursortmr
+            lda         ,x
+            adda        #1
+            sta         ,x
+            pop         y
+            pop         x
+            pop         d
+            ret
+movePrompt  push        x
+            push        y
+            push        d
+            ldy         #$e1e0
+            ldx         #playerTurn
+            lda         ,x
+            cmpa        #1
+            jeq         mpp1
+            ldx         #player2p
+            jmp         mpprint
+mpp1        ldx         #player1p
+mpprint     call        print
+            ldy         #$e1fa
+            ldx         #movePromptxt
+            call        print
+            ldb         #11
+            ldy         #$e1e1
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            stb         ,y++
+            pop         d
+            pop         y
+            pop         x
+            ret
+printboard  push        x
+            push        y
+            push        d
+            ldy         #$e000
+            ldx         #boardCount
+            lda         #49
+            sta         ,x
+            ldx         #tttData
+loop1       lda         ,x+
+            cmpa        #$58
+            jeq         prntx
+            cmpa        #$4F
+            jeq         prnto
+            push        x
+            ldx         #boardcount
+            lda         ,x
+            pop         x
+            tfr         a,b
+            jmp         prntboard
+prntx       ldb         #$58
+            jmp         prntboard
+prnto       ldb         #$4F
+prntboard   stb         ,y++
+            addy        #2
+            push        x
+            ldx         #boardCount
+            lda         ,x
+            adda        #1
+            sta         ,x
+            pop         x
+            cmpy        #$e00c
+            jeq         row2
+            cmpy        #$e0ac
+            jeq         row3
+            cmpy        #$e14c
+            jge         boarddone
+            jmp         loop1
+row2        ldy         #$e0a0
+            jmp         loop1
+row3        ldy         #$e140
+            jmp         loop1
+boarddone   lda         #$7C
+            ldy         #$e002
+            sta         ,y
+            ldy         #$e006
+            sta         ,y
+            ldy         #$e0a2
+            sta         ,y
+            ldy         #$e0a6
+            sta         ,y
+            ldy         #$e142
+            sta         ,y
+            ldy         #$e146
+            sta         ,y
+            pop         d
+            pop         y
+            pop         x
+            ret
+initData    push        x
+            push        a
+            ldx         #tttData
+            lda         #0
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            sta         ,x+
+            sta         ,x
+            pop         a
+            pop         x
+            ret
+print       push        a                       ; Save the A register
+            push        x                       ; Save the X register
+            push        y                       ; Save the Y register
+loop2       lda         ,x+                     ; Load A with a byte pointed to by the X register then increment the X register by one
+            cmpa        #0                      ; Is it a 0x00 byte?
+            jeq         finish                  ; If it is a 0x00 byte, jump to our finish label
+            sta         ,y++                    ; Store the byte at the address pointed to by our Y register and increment Y by 2
+            jmp         loop2                   ; Repeat the process by jumping to our loop2 label
+finish      pop         y                       ; Restore Y register
+            pop         x                       ; Restore X register
+            pop         a                       ; Restore A register
+            ret                                 ; The subroutine is finished, so return
+key         push        x
+            ldx         #$ffff
+            lda         ,x
+            pop         x
+            ret
+endprogram  end         start

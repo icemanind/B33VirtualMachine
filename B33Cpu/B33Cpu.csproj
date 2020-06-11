@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{20C2E093-DBF0-426C-B3A1-7B7F7B22A281}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>B33Cpu</RootNamespace>
+    <AssemblyName>B33Cpu</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="B33Cpu.cs" />
+    <Compile Include="B33Program.cs" />
+    <Compile Include="B33Registers.cs" />
+    <Compile Include="DebugData.cs" />
+    <Compile Include="Hardware\B33GfxScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Hardware\B33GfxScreen.Designer.cs">
+      <DependentUpon>B33GfxScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Hardware\B33Keyboard.cs" />
+    <Compile Include="Hardware\B33Screen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Hardware\B33Screen.Designer.cs">
+      <DependentUpon>B33Screen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Hardware\B33ScreenWpf.xaml.cs">
+      <DependentUpon>B33ScreenWpf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Hardware\B33Sound.cs" />
+    <Compile Include="Hardware\IB33Hardware.cs" />
+    <Compile Include="Hardware\IB33Mouse.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Hardware\B33GfxScreen.resx">
+      <DependentUpon>B33GfxScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Hardware\B33Screen.resx">
+      <DependentUpon>B33Screen.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Hardware\B33ScreenWpf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

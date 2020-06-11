@@ -1,0 +1,25 @@
+﻿; This sample prints "Hello World" to the
+; virtual screen. This method is the
+; better way to print a string to
+; the screen. The X register is first
+; loaded with the address location of
+; mystr, which is our "Hello World!" 
+; string. The Y register is then loaded
+; with the address of our screen. The
+; A register is then loaded with a
+; byte from the address location of X.
+; If this byte is a 0, then it finishes.
+; Otherwise, it stores the byte at our
+; Y location (the screen), and it
+; jumps to our loop label till the
+; entire string is printed.
+mystr       str         "Hello World!"          ; Define Hello World string
+            chr         0                       ; End string with a 0x00 byte
+start       ldx         #mystr                  ; Load X with the address of our string
+            ldy         #$e000                  ; Load Y with the address of the virtual screen
+loop1       lda         ,x+                     ; Load A with the first letter of our string and then increment the string pointer
+            cmpa		#0                      ; Is this character a 0x00 byte?
+            jeq         finish                  ; If it is, we are done, so jump to the finish label
+            sta         ,y++                    ; Store the data in the A register on the screen and increment the screen pointer by 2
+            jmp         loop1                   ; Jump up to the loop1 label
+finish      end         start                   ; We are finished!

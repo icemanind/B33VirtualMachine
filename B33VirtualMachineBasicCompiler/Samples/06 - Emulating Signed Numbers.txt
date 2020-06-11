@@ -1,0 +1,37 @@
+﻿' This program shows you how you can emulate
+' signed numbers. However, by doing this,
+' numbers can only be as big as 32767. Any number
+' larger then this will be interpreted as a 
+' negative number.
+10 cls
+20 locate 0,0
+30 print "1 - 4 = "
+40 x=1-4
+50 call 500
+60 locate 1,0
+70 print "8 + 12 = "
+80 x=8+12
+90 call 500
+100 locate 2,0
+110 print "32 - 64 = "
+120 x=32-64
+130 call 500
+140 locate 3,0
+150 print "7 * -3 = "
+160 x = 7 * (-3)
+170 call 500
+180 locate 4,0
+190 print "-2 * -2 = "
+200 x = (-2) * (-2)
+210 call 500
+220 locate 5,0
+230 print "-16 / 8 = "
+240 x = (-16) / 8
+250 call 500
+260 end
+500 if x>32767 then goto 520
+510 goto 540
+520 x=65535-x+1
+530 print "-"
+540 printnum x
+550 return

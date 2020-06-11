@@ -1,0 +1,190 @@
+﻿' Clear the Screen
+10 cls
+' Call the "Reset Variables" routine that begins on line 400
+20 call 400
+' Call  the "Print Header" routine that begins on line 500
+30 call 500
+' Call the "Draw Tic Tac Toe Board" routine that begins on line 530
+40 call 530
+' The variable p contains a 1 if its X's turn to go
+' It will hold 2 if its O's turn to go
+50 p = 1
+51 w=0
+60 if w=1 then goto 1280
+61 if w=2 then goto 1280
+62 locate 8,1
+63 call 1010
+70 if p=1 then print "Player X"
+80 if p=2 then print "Player O"
+90 print ", it is your turn -->"
+100 k=key()
+110 if k=0 then goto 100
+120 if k<=48 then goto 100
+130 if k>=58 then goto 100
+140 if k=49 then goto 200
+150 if k=50 then goto 202
+160 if k=51 then goto 204
+170 if k=52 then goto 206
+180 if k=53 then goto 208
+190 if k=54 then goto 210
+191 if k=55 then goto 212
+192 if k=56 then goto 214
+193 if k=57 then goto 216
+199 end
+200 if s1<>0 then goto 280
+201 goto 220
+202 if s2<>0 then goto 280
+203 goto 222
+204 if s3<>0 then goto 280
+205 goto 224
+206 if s4<>0 then goto 280
+207 goto 226
+208 if s5<>0 then goto 280
+209 goto 228
+210 if s6<>0 then goto 280
+211 goto 230
+212 if s7<>0 then goto 280
+213 goto 232
+214 if s8<>0 then goto 280
+215 goto 234
+216 if s9<>0 then goto 280
+217 goto 236 
+220 s1=p
+221 goto 239
+222 s2=p
+223 goto 239
+224 s3=p
+225 goto 239
+226 s4=p
+227 goto 239
+228 s5=p
+229 goto 239
+230 s6=p
+231 goto 239
+232 s7=p
+233 goto 239
+234 s8=p
+235 goto 239
+236 s9=p
+239 if p=1 then goto 260
+240 p=1
+241 call 530
+242 call 1060
+250 goto 60
+260 p=2
+261 call 530
+262 call 1060
+270 goto 60
+280 call 940
+290 goto 100 
+399 end
+' Reset Variables
+400 s1=0
+410 s2=0
+420 s3=0
+430 s4=0
+440 s5=0
+450 s6=0
+460 s7=0
+470 s8=0
+480 s9=0
+481 w=0
+490 return
+' Print Header
+500 locate 0,0
+510 print "Tic-Tac-Toe!"
+520 return
+' Draw Tic Tac Toe board
+530 locate 2,1
+540 if s1=0 then print "1"
+550 if s1=1 then print "X"
+560 if s1=2 then print "O"
+570 print "|"
+580 if s2=0 then print "2"
+590 if s2=1 then print "X"
+600 if s2=2 then print "O"
+610 print "|"
+620 if s3=0 then print "3"
+630 if s3=1 then print "X"
+640 if s3=2 then print "O"
+650 locate 3,1
+660 print "-----"
+670 locate 4,1
+680 if s4=0 then print "4"
+690 if s4=1 then print "X"
+700 if s4=2 then print "O"
+710 print "|"
+720 if s5=0 then print "5"
+730 if s5=1 then print "X"
+740 if s5=2 then print "O"
+750 print "|"
+760 if s6=0 then print "6"
+770 if s6=1 then print "X"
+780 if s6=2 then print "O"
+790 locate 5,1
+800 print "-----"
+810 locate 6,1
+820 if s7=0 then print "7"
+830 if s7=1 then print "X"
+840 if s7=2 then print "O"
+850 print "|"
+860 if s8=0 then print "8"
+870 if s8=1 then print "X"
+880 if s8=2 then print "O"
+890 print "|"
+900 if s9=0 then print "9"
+910 if s9=1 then print "X"
+920 if s9=2 then print "O"
+930 return
+' Print Invalid move message
+940 locate 9,1
+950 fgcolor pink
+960 bgcolor black
+970 print "INVALID MOVE!"
+980 fgcolor white
+990 bgcolor black
+1000 return
+1010 locate 9,1
+1020 fgcolor white
+1030 bgcolor black
+1040 print "              "
+1050 return
+' Check for a win
+1060 w=0
+' Check for X and O winning left vertical
+1070 if s1=1 then if s4=1 then if s7=1 then goto 1240
+1080 if s1=2 then if s4=2 then if s7=2 then goto 1260
+' Check for X and O winning middle vertical
+1090 if s2=1 then if s5=1 then if s8=1 then goto 1240
+1100 if s2=2 then if s5=2 then if s8=2 then goto 1260
+' Check for X and O winning right vertical
+1110 if s3=1 then if s6=1 then if s9=1 then goto 1240
+1120 if s3=2 then if s6=2 then if s9=2 then goto 1260
+' Check for X and O winning diagonal left to right
+1130 if s1=1 then if s5=1 then if s9=1 then goto 1240
+1140 if s1=2 then if s5=2 then if s9=2 then goto 1260
+' Check for X and O winning diagonal right to left
+1150 if s3=1 then if s5=1 then if s7=1 then goto 1240
+1160 if s3=2 then if s5=2 then if s7=2 then goto 1260
+' Check for X and O winning top horizontally
+1170 if s1=1 then if s2=1 then if s3=1 then goto 1240
+1180 if s1=2 then if s2=2 then if s3=2 then goto 1260
+' Check for X and O winning middle horizontally
+1190 if s4=1 then if s5=1 then if s6=1 then goto 1240
+1200 if s4=2 then if s5=2 then if s6=2 then goto 1260
+' Check for X and O winning bottom horizontally
+1210 if s7=1 then if s8=1 then if s9=1 then goto 1240
+1220 if s7=2 then if s8=2 then if s9=2 then goto 1260
+' No win, so return
+1230 return
+' X Wins
+1240 w=1
+1250 return
+' O wins
+1260 w=2
+1270 return
+1280 locate 10,1
+1290 if w=1 then print "X "
+1300 if w=2 then print "O "
+1310 print "wins!"
+1320 end

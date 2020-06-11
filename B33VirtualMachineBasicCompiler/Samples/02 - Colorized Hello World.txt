@@ -1,0 +1,85 @@
+﻿' Prints "Hello World" to the center of the screen
+' in a rainbow of different and random colors
+
+' First assign "Hello World!" to a string variable.
+' String variables must have a dollar sign after the variable.
+' Examples would be a$, b$ MyString$, etc...
+10 a$="Hello World!"
+
+' xPos will hold our X position. We want the text to be centered,
+' so we will use this formula: (80 - length of string) / 2
+' 80 is the number of characters our B33Screen holds.
+15 xPos = (80-len(a$))/2
+
+' Start a FOR loop. A FOR loop is
+' a special counter loop that starts
+' at a specified number and counts up
+' or counts down until the variable in
+' the FOR loop reaches the end. In this
+' example, a variable, X, starts at 1
+' and the code in between the FOR loop
+' and the NEXT statement repeat until
+' X is equal to the length of A$ (in this
+' case, 12). X is incremented by one, by default,
+' each iteration. You can append a STEP
+' statement to change how much X would increment
+' or decrement.
+20 for x=1 to len(a$)
+
+' Set the foreground color to a random color.
+' The RND function returns a random number between
+' 0 and (1-specified number). So RND(16) will return
+' a random number between 0 and 15. The FGCOLOR command
+' sets the current foreground text color. You can either
+' specify a number between 0 and 15 (See the reference chart
+' in the B33VirtualMachineAssembler project in CPUInfo.txt) or
+' you can specify a color directly. The following commands also work:
+' FGCOLOR BLACK
+' FGCOLOR BLUE
+' FGCOLOR GREEN
+' FGCOLOR CYAN
+' FGCOLOR RED
+' FGCOLOR MAGENTA
+' FGCOLOR BROWN
+' FGCOLOR WHITE
+' FGCOLOR DARKGREY
+' FGCOLOR DARKGRAY
+' FGCOLOR GRAY
+' FGCOLOR GREY
+' FGCOLOR BRIGHTBLUE
+' FGCOLOR LIGHTBLUE
+' FGCOLOR BRIGHTGREEN
+' FGCOLOR LIGHTGREEN
+' FGCOLOR BRIGHTCYAN
+' FGCOLOR LIGHTCYAN
+' FGCOLOR PINK
+' FGCOLOR BRIGHTRED
+' FGCOLOR LIGHTRED
+' FGCOLOR BRIGHTMAGENTA
+' FGCOLOR LIGHTMAGENTA
+' FGCOLOR YELLOW
+' FGCOLOR BRIGHTWHITE
+' FGCOLOR LIGHTWHITE
+30 fgcolor rnd(16)
+
+' LOCATE moves the cursor to the specified position.
+' It's usage looks like this: LOCATE row, column
+' Our column is set by xPos and 12 is our row because
+' our B33Screen has 25 rows and 25 / 2 is 12.5 and
+' because we are dealing with integers, we make this 12.
+35 locate 12, xPos
+
+' Increment xPos by one
+37 xPos = xPos + 1
+
+' Prints a letter from our original "Hello World!" string.
+' MID$ returns a portion of a string. The usage looks like this:
+' MID$(string, starting position, length)
+' MID$("Bowling", 1, 4) would return "Bowl".
+' MID$("Bowling", 2, 3) would return "owl".
+' starting position is 1-based, not 0-based
+40 print mid$(a$,x,1)
+
+' Finish our loop. Note that "NEXT X" would also be acceptable, or
+' simply "NEXT"
+50 next

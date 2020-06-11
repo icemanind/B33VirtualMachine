@@ -1,0 +1,24 @@
+﻿; This program will write Hello World to the screen.
+; This version is the long version that loads each
+; letter into the A register and writes each letter
+; to the screen individually.
+start       lda         #72         ; Load A register with 72 (ASCII 'H')
+            sta         $e000       ; Store A at memory location 0xE000 (the virtual screen)
+            lda         #101        ; Load A register with 101 (ASCII 'e')
+            sta         $e002       ; Store A at memory location 0xE002 (the second letter over)
+            lda         #108        ; Load A register with 108 (ASCII 'l')
+            sta         $e004       ; Store A at memory location 0xE004
+            sta         $e006       ; Store A at memory location 0xE006 (A still contains 108)
+            lda         #111        ; etc...
+            sta         $e008       ; etc...
+            lda         #119
+            sta         $e00c
+            lda         #111
+            sta         $e00e
+            lda         #114
+            sta         $e010
+            lda         #108
+            sta         $e012
+            lda         #100
+            sta         $e014
+            end         start

@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C8723B16-9715-4A8A-90FE-BCD564C74806}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>B33VirtualMachineBasicCompiler</RootNamespace>
+    <AssemblyName>B33VirtualMachineBasicCompiler</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssembleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AssembleForm.Designer.cs">
+      <DependentUpon>AssembleForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AssemblyRetVal.cs" />
+    <Compile Include="B33RichTextEditor.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BooleanExpressionParser.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="ExpressionParserOutput.cs" />
+    <Compile Include="ForLoopData.cs" />
+    <Compile Include="Functions.cs" />
+    <Compile Include="IExpressionParser.cs" />
+    <Compile Include="LabelResolves.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LabelResolves.Designer.cs">
+      <DependentUpon>LabelResolves.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NativeExpressionParser.cs" />
+    <Compile Include="NumericExpressionParser.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SamplesBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SamplesBrowser.Designer.cs">
+      <DependentUpon>SamplesBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StringExpressionParser.cs" />
+    <Compile Include="StringExpressionParser_OLD.cs" />
+    <Compile Include="TokenParser.cs" />
+    <Compile Include="Translator.cs" />
+    <Compile Include="User32.cs" />
+    <EmbeddedResource Include="AssembleForm.resx">
+      <DependentUpon>AssembleForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LabelResolves.resx">
+      <DependentUpon>LabelResolves.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="SamplesBrowser.resx">
+      <DependentUpon>SamplesBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\01 - Hello World.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\02 - Colorized Hello World.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\03 - Fun With Strings.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\04 - Tic Tac Toe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\05 - Drawing Circles.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\06 - Emulating Signed Numbers.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\07 - FizzBuzz.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\B33Assembler\B33Assembler.csproj">
+      <Project>{d6b880b0-68b7-4908-9eb0-de2d91d9f852}</Project>
+      <Name>B33Assembler</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

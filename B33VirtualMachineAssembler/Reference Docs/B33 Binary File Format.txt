@@ -1,0 +1,6 @@
+﻿B33						3 bytes
+<Start Address>			2 bytes (Little Endian)
+<Execute Address>		2 bytes (Little Endian)
+<Debug Info Address>	2 bytes (Little Endian) (Set to $0000 if no debug info is included)
+<Require Dual Monitor>	1 byte ($00 if program does not require dual monitors. $01 if dual monitors are required)
+<Program + Data>		((Size of File) - 10) bytes

@@ -1,0 +1,12 @@
+﻿; This sample will show you how to
+; simply load a register with a decimal
+; value. We are going to load
+; the A register with 65 and load the
+; B register with hex $45. Note the
+; pound sign (#), which means load
+; the register with the value
+; immediately following the pound sign
+start       lda         #65                     ; Load A register with 65
+            ldb         #$45                    ; Load B register with hex 45 (0x45)
+            ldx         #%1010100000000         ; Load X register with binary value (0x1500)
+            end         start

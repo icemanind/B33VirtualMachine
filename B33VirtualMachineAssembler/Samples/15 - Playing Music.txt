@@ -1,0 +1,43 @@
+﻿start ldx #261
+ ldy #500
+ call playsound
+
+ ldx #261
+ ldy #500
+ call playsound
+
+ ldx #392
+ ldy #500
+ call playsound
+
+ ldx #392
+ ldy #500
+ call playsound
+
+ ldx #440
+ ldy #500
+ call playsound
+
+ ldx #440
+ ldy #500
+ call playsound
+
+ ldx #392
+ ldy #1000
+ call playsound
+
+ end start
+playsound tfr x,d
+ ldx #$fe00
+ stb ,x+
+ sta ,x+
+ tfr y,d
+ stb ,x+
+ sta ,x+
+ lda #1
+ ldy #$fe04
+ sta ,y
+loop1 lda ,y
+ cmpa #0
+ jne loop1
+ ret

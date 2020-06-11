@@ -1,0 +1,94 @@
+﻿The B33 machine has 64K of memory, starting at $0000 up to $FFFF.
+The B33 screen starts at memory location $E000. Each screen is 4003
+bytes in length. The screen has a width of 80 characters long and 25 lines in height.
+The upper left hand corner of the screen would start at $E000. ASCII characters
+are stored in the even addresses ($E000, $E002, $E004, etc...). The attribute
+is stored in the odd addresses ($E001, $E003, $E005, etc...). The attribute determines
+what color the character is and what color background the character has. 
+
+Color Table:
+
+0 - Black
+1 - Blue
+2 - Green
+3 - Cyan
+4 - Red
+5 - Magenta
+6 - Brown
+7 - White
+8 - Dark Gray
+9 - Bright Blue
+10 - Bright Green
+11 - Bright Cyan
+12 - Pink
+13 - Bright Magenta
+14 - Yellow
+15 - Bright White
+
+To determine an attribute, you'd first select a background color. The background color
+can be any color (0-8) in the table above. You'd then left shift 4 times to the right.
+Finally, you'd add in any color from above. So lets say you wanted a Red background:
+
+    lda #4
+	lsft a
+	lsft a
+	lsft a
+	lsft a
+
+You want Yellow text on your red background:
+
+    ldb #14
+	adda b
+
+Register A would now contain the correct attribute for yellow text on a red background!
+
+You could create a subroutine for this. Like this:
+
+    start     ldd       #$040D
+	          call      GetAttrib
+	          sta       #$e001        ; A now contains the attribute
+	          end       start
+    GetAttrib lsft      a
+	          lsft      a
+			  lsft      a
+			  lsft      a
+			  adda      b
+			  ret
+
+The screen memory uses the first 4000 bytes (0-3999). The byte after this can be set to
+0 or 1 determining whether to display a flashing cursor or not. The byte after this one
+is the flashing cursor location (0-3999).
+
+The following byte is used to pass registers as operands:
+
+0 0 0 0 0 0 0 0
+| | | | | | | |
+| | | | | | | -- A (1)
+| | | | | | ---- B (2)
+| | | | | ------ D (4)
+| | | | -------- X (8)
+| | | ---------- Y (16)
+| | ------------ + (32)
+| -------------- - (64)
+---------------- +/- Doubler (128)
+
+
+
+Registers
+-----------------------
+A		8-bit register
+B		8-bit register
+D		16-bit register (A & B concatenated)
+X		16-bit register
+Y		16-bit register
+PC		16-bit register (internal, used to keep track of current instruction pointer)
+CC		8-bit flag register (internal, used by specific mnemonics to hold flag conditions)
+
+
+Condition Code flag register
+---------------------------------
+(1)  Bit 1 -- Overflow (contains the bit that was lost during a left or right shift)
+(2)  Bit 2 -- Compare is equal
+(4)  Bit 3 -- Compare is greater then
+(8)  Bit 4 -- Compare is less then
+(16) Bit 5 -- Compare is not equal

@@ -1,0 +1,35 @@
+﻿; This program prints hello world on
+; the first line of the screen and also
+; on the second line. It does this by
+; calling a "print" routine. Notice that
+; the print routine pushes the A, X, and Y
+; registers to preserve the values. After
+; the routine ends, it restores these
+; registers to their original values. Also
+; note that this is a stack, so you must pop
+; them in the reverse order that you pushed
+; them.
+myStr1      str         "Hello World! Line 1"   ; Define our Hello World line 1 string
+            chr         0                       ; End with a 0x00 byte
+myStr2      str         "Hello World! Line 2"   ; Define our Hello World line 2 string
+            chr         0                       ; End with a 0x00 byte
+start       ldx         #myStr1                 ; Load X with the address of our first string
+            ldy         #$e000                  ; Load Y with the address of our virtual screen
+            call        print                   ; Call the print subroutine
+            ldx         #myStr2                 ; Load X with the address of our second string
+            ldy         #$e0a0                  ; Load Y with the address of the second line of our virtual screen
+            call        print                   ; Call the print subroutine
+            jmp         endprogram              ; We are done, so jump to the end of our program
+print       push        a                       ; Save the A register
+            push        x                       ; Save the X register
+            push        y                       ; Save the Y register
+loop1       lda         ,x+                     ; Load A with a byte pointed to by the X register then increment the X register by one
+            cmpa        #0                      ; Is it a 0x00 byte?
+            jeq         finish                  ; If it is a 0x00 byte, jump to our finish label
+            sta         ,y++                    ; Store the byte at the address pointed to by our Y register and increment Y by 2
+            jmp         loop1                   ; Repeat the process by jumping to our loop1 label
+finish      pop         y                       ; Restore Y register
+            pop         x                       ; Restore X register
+            pop         a                       ; Restore A register
+            ret                                 ; The subroutine is finished, so return
+endprogram  end         start                   ; End program
